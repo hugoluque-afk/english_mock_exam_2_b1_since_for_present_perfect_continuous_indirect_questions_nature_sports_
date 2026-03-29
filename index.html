@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en" translate="no" class="notranslate">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" content="notranslate">
+    <title>English Exam - Level B1 | Mock Exam by:Hugo Luque</title>
+    <style>
+        /* Formal Exam Styling */
+        :root {
+            --text-color: #1a1a1a;
+            --bg-color: #f4f4f9;
+            --paper-color: #ffffff;
+            --border-color: #cccccc;
+            --highlight: #e0f2fe;
+            --primary: #0369a1;
+            --success: #15803d;
+            --warning: #b45309;
+            --danger: #b91c1c;
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, serif; /* Formal exam font */
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        /* Floating Timer Styling */
+        #floating-timer {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.85);
+            color: #ffffff;
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 28px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 9999;
+            border: 2px solid #38bdf8;
+            letter-spacing: 2px;
+        }
+
+        .exam-paper {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--paper-color);
+            padding: 40px 50px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        /* Header Styles */
+        .exam-header {
+            border-bottom: 2px solid var(--text-color);
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+
+        .exam-title {
+            text-align: center;
+            font-size: 26px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Section Styles */
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            background-color: #f3f4f6;
+            padding: 5px 10px;
+            margin: 30px 0 15px 0;
+            border-left: 4px solid var(--primary);
+        }
+
+        .part-instructions {
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .word-box {
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            text-align: center;
+            margin-bottom: 15px;
+            font-style: italic;
+            background-color: #fafafa;
+        }
+
+        .question {
+            margin-bottom: 12px;
+            font-size: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 5px;
+        }
+
+        .q-number {
+            font-weight: bold;
+            margin-right: 5px;
+            min-width: 25px;
+        }
+
+        input[type="text"] {
+            border: none;
+            border-bottom: 1px dashed var(--text-color);
+            background-color: var(--highlight);
+            outline: none;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 16px;
+            padding: 2px 5px;
+            color: var(--primary);
+            font-weight: bold;
+            width: 200px;
+            transition: background-color 0.3s;
+        }
+        
+        input[type="text"].long-input {
+            width: 400px;
+        }
+
+        input[type="text"]:focus {
+            background-color: #bae6fd;
+            border-bottom: 1px solid var(--primary);
+        }
+
+        select {
+            border: 1px dashed var(--text-color);
+            background-color: var(--highlight);
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 15px;
+            padding: 2px;
+            color: var(--primary);
+            font-weight: bold;
+            outline: none;
+            cursor: pointer;
+        }
+
+        /* Reading Text Box */
+        .reading-text {
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #fafafa;
+            line-height: 1.6;
+            text-align: justify;
+        }
+
+        /* Hints */
+        .hint-btn {
+            background: none;
+            border: none;
+            color: #9ca3af;
+            cursor: pointer;
+            font-size: 12px;
+            padding: 0 5px;
+            text-decoration: underline;
+        }
+        .hint-btn:hover { color: var(--primary); }
+        .hint-text {
+            display: none;
+            font-size: 13px;
+            color: #854d0e;
+            background-color: #fef08a;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 10px;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 40px;
+            font-family: Arial, sans-serif;
+            border-radius: 4px;
+        }
+        .submit-btn:hover { background-color: #0284c7; }
+
+        /* Results Modal Styling (Hoja Flotante) */
+        #results-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+        #results-modal {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            max-width: 650px;
+            width: 95%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        
+        .result-msg { font-size: 28px; font-weight: bold; margin-bottom: 10px; margin-top: 0; }
+        
+        .score-display {
+            font-size: 55px;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 10px 0;
+            line-height: 1;
+        }
+
+        .time-display {
+            font-size: 20px;
+            color: #4b5563;
+            margin-top: 15px;
+            margin-bottom: 25px;
+            font-weight: bold;
+            background: #f3f4f6;
+            padding: 10px;
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        .logro-badge {
+            display: inline-block;
+            padding: 15px 30px;
+            color: white;
+            font-size: 26px;
+            font-weight: bold;
+            border-radius: 8px;
+            margin-top: 5px;
+            line-height: 1.4;
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            gap: 20px;
+        }
+        
+        .stat-box {
+            flex: 1;
+            padding: 20px;
+            border-radius: 12px;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .modal-mistakes-list {
+            text-align: left;
+            max-height: 250px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            border: 2px solid #e5e7eb;
+            padding: 15px;
+            background: #f9fafb;
+            border-radius: 8px;
+        }
+
+        .mistake-card {
+            background-color: #fef2f2;
+            border-left: 5px solid var(--danger);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        .mistake-q { font-weight: bold; margin-bottom: 8px; color: #1f2937; }
+        .wrong-ans { color: var(--danger); text-decoration: line-through; margin-right: 15px; font-weight: bold; }
+        .correct-ans { color: var(--success); font-weight: bold; }
+
+        .retake-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #1f2937;
+            color: white;
+            border: none;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .retake-btn:hover { background-color: #111827; }
+
+        @media (max-width: 768px) {
+            .exam-paper { padding: 20px; }
+            input[type="text"].long-input { width: 100%; }
+            #floating-timer { font-size: 20px; top: 10px; right: 10px; padding: 8px 15px;}
+            .stats-container { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="floating-timer">00:00</div>
+
+<div class="exam-paper">
+    <!-- Header del examen -->
+    <div class="exam-header">
+        <div class="exam-title">English Mock Exam - Level B1 | 2nd Grade</div>
+    </div>
+
+    <!-- Contenedor donde se inyectan las preguntas barajadas -->
+    <div id="exam-content"></div>
+
+    <button class="submit-btn" id="submit-btn" onclick="gradeExam()">Submit Exam</button>
+</div>
+
+<!-- Modal Flotante de Resultados -->
+<div id="results-overlay">
+    <div id="results-modal">
+        <h2 id="modal-result-msg" class="result-msg"></h2>
+        
+        <div class="score-display" style="display: flex; justify-content: center; gap: 40px; align-items: center; flex-wrap: wrap;">
+            <div>
+                <div style="font-size: 16px; color: #6b7280; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">Raw Score</div>
+                <span id="modal-score-num">0</span><span style="font-size: 30px; color: #6b7280;">/<span id="modal-total-pts">60</span></span>
+            </div>
+            <div style="border-left: 3px solid #e5e7eb; height: 80px; border-radius: 2px;"></div>
+            <div>
+                <div style="font-size: 16px; color: #6b7280; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">Final Grade</div>
+                <span id="modal-grade-20" style="font-size: 80px;">00</span><span style="font-size: 30px; color: #6b7280;">/20</span>
+            </div>
+        </div>
+        
+        <div id="modal-logro-badge" class="logro-badge"></div>
+        
+        <br>
+        <div class="time-display">⏱️ Time Taken: <span id="modal-time-num">00:00</span></div>
+        
+        <!-- Diagnóstico Numérico -->
+        <div class="stats-container">
+            <div class="stat-box" style="background: #dcfce7; color: #166534; border: 2px solid #86efac;">
+                ✅ Correct<br><span id="stat-correct" style="font-size: 45px;">0</span>
+            </div>
+            <div class="stat-box" style="background: #fee2e2; color: #991b1b; border: 2px solid #fca5a5;">
+                ❌ Incorrect<br><span id="stat-incorrect" style="font-size: 45px;">0</span>
+            </div>
+        </div>
+
+        <!-- Lista de errores -->
+        <div id="modal-mistakes-container">
+            <h3 style="color: var(--danger); border-bottom: 3px solid var(--danger); padding-bottom: 5px; text-align: left; margin-bottom: 15px;">📋 Mistakes Review</h3>
+            <div id="modal-mistakes-content" class="modal-mistakes-list"></div>
+        </div>
+
+        <!-- Botones de Acción -->
+        <div style="display: flex; gap: 15px; margin-top: 20px;">
+            <button class="submit-btn" style="margin-top: 0; background-color: #0369a1; flex: 1;" onclick="document.getElementById('results-overlay').style.display='none'">Review Exam Paper</button>
+            <button class="retake-btn" style="margin-top: 0; flex: 1;" onclick="startExam()">🔄 Retake Exam</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- DATOS DEL EXAMEN ---
+    const examData = {
+        sec1A: {
+            title: 'Section 1: Grammar - Present Perfect Continuous & "Since" / "For" (15 points)',
+            instructions: 'A. Complete the sentences with Since or For. (5 points)',
+            questions: [
+                { q: "We have been exploring the humid forest [BLANK] three weeks.", a: "for", hint: "Periodo o cantidad de tiempo." },
+                { q: "I haven't seen a wild predator [BLANK] 2019.", a: "since", hint: "Punto de inicio en el pasado." },
+                { q: "She has been practicing for her skydiving test [BLANK] a long time.", a: "for", hint: "Expresión de duración." },
+                { q: "It has been snowing heavily in the tundra [BLANK] Monday.", a: "since", hint: "Día de la semana específico." },
+                { q: "They have been observing the nocturnal birds [BLANK] midnight.", a: "since", hint: "Hora exacta de inicio." }
+            ]
+        },
+        sec1B: {
+            instructions: 'B. Complete the sentences using the Present Perfect Continuous form of the verbs in brackets. (Affirmative, Negative, or Interrogative). (5 points)',
+            questions: [
+                { q: "(they / hike) [BLANK] through the canyon all morning?", a: "have they been hiking", hint: "Interrogativo con 'they'." },
+                { q: "The marine biologists (not / study) [BLANK] the coral reefs due to the monsoon.", a: "haven't been studying|have not been studying", hint: "Negativo para plural." },
+                { q: "She (prepare) [BLANK] for the white-water rafting trip since last month.", a: "has been preparing", hint: "Afirmativo para 'she'." },
+                { q: "(how long / you / observe) [BLANK] those birds of prey?", a: "how long have you been observing", hint: "Pregunta con 'how long'." },
+                { q: "We (not / camp) [BLANK] in the valley lately because of the thunderstorms.", a: "haven't been camping|have not been camping", hint: "Negativo para 'we'." }
+            ]
+        },
+        sec1C: {
+            instructions: 'C. Sentence Transformation: Rewrite the sentences using the Present Perfect Continuous and since or for. (5 points)',
+            questions: [
+                { q: "She started reading about amphibians at 10:00 AM. It is now 1:00 PM. (read)<br>She [BLANK_LONG].", a: "has been reading about amphibians for three hours|has been reading about amphibians since 10:00 am|has been reading for three hours", hint: "Usa Present Perfect Continuous + for/since." },
+                { q: "We began exploring the plateau on Tuesday. It is still Tuesday, and we are still exploring. (explore)<br>We [BLANK_LONG].", a: "have been exploring the plateau since tuesday|have been exploring since tuesday", hint: "Usa Present Perfect Continuous + since." },
+                { q: "He started feeling a thrill twenty minutes ago. (feel)<br>He [BLANK_LONG].", a: "has been feeling a thrill for twenty minutes|has been feeling a thrill for 20 minutes", hint: "Usa Present Perfect Continuous + for." },
+                { q: "The tornado started forming an hour ago. It is still forming. (form)<br>The tornado [BLANK_LONG].", a: "has been forming for an hour", hint: "Usa Present Perfect Continuous + for." },
+                { q: "How much time has passed since they started observing the carnivores? (How long / observe)<br>[BLANK_LONG]?", a: "how long have they been observing the carnivores|how long have they been observing", hint: "Empieza con 'How long...'" }
+            ]
+        },
+        sec2A: {
+            title: 'Section 2: Vocabulary - The Natural World (15 points)',
+            instructions: 'A. Read the definitions and write the correct landscape or geography word from the box. There are two extra words. (5 points)',
+            wordBox: 'Valley - Desert - Forest - Peninsula - Tundra - Plateau - Archipelago',
+            questions: [
+                { q: "A low area of land between hills or mountains, typically with a river flowing through it: [BLANK]", a: "valley", hint: "Valle." },
+                { q: "A barren area of landscape where little precipitation occurs: [BLANK]", a: "desert", hint: "Desierto." },
+                { q: "A large area covered chiefly with trees and undergrowth: [BLANK]", a: "forest", hint: "Bosque." },
+                { q: "A piece of land almost surrounded by water or projecting out into a body of water: [BLANK]", a: "peninsula", hint: "Península." },
+                { q: "A vast, flat, treeless Arctic region in which the subsoil is permanently frozen: [BLANK]", a: "tundra", hint: "Tundra." }
+            ]
+        },
+        sec2B: {
+            instructions: 'B. Animals & Wildlife: Read the description and identify the category, characteristic, or animal type. (5 points)',
+            questions: [
+                { q: "An animal that feeds mainly on flesh is a/an [BLANK].", a: "carnivore", hint: "Carnívoro." },
+                { q: "A cold-blooded vertebrate animal with dry, scaly skin is a/an [BLANK].", a: "reptile", hint: "Reptil." },
+                { q: "An animal that is hunted and killed by another for food is known as [BLANK].", a: "prey", hint: "Presa." },
+                { q: "A warm-blooded vertebrate animal with hair or fur is a/an [BLANK].", a: "mammal", hint: "Mamífero." },
+                { q: "An animal that eats food of both plant and animal origin is a/an [BLANK].", a: "omnivore", hint: "Omnívoro." }
+            ]
+        },
+        sec2C: {
+            instructions: 'C. Weather & Climate: Complete the short text with the correct weather words. (5 points)',
+            wordBox: 'Blizzard - Arid - Breezy - Thunderstorm - Monsoon',
+            textParts: [
+                "Our trip to the mountains was full of surprises. Usually, the region is very",
+                "with almost no rain. However, the weather changed, and a huge",
+                "started, with loud lightning and heavy rain. The next day, the temperature dropped, and we were caught in a terrible",
+                "with snow and high winds. Luckily, we found shelter. By the weekend, the weather was just",
+                "and pleasant. Locals say this extreme change is rare, unlike in Southeast Asia where the",
+                "brings heavy rains every season."
+            ],
+            answers: ["arid", "thunderstorm", "blizzard", "breezy", "monsoon"],
+            hints: ["Seco / Árido.", "Tormenta eléctrica.", "Tormenta de nieve.", "Con brisa / Agradable.", "Monzón (lluvias asiáticas)."]
+        },
+        sec3A: {
+            title: 'Section 3: Vocabulary - Adventure and Sports (10 points)',
+            instructions: 'A. Match the equipment (Gear) to the correct extreme sport. Write the sport next to the gear. (5 points)',
+            wordBox: 'Bungee jumping - Skydiving - Rock climbing - White-water rafting - Scuba diving',
+            questions: [
+                { q: "Harness, Elastic cord, Helmet: [BLANK]", a: "bungee jumping", hint: "Salto en bungee." },
+                { q: "Parachute, Goggles, Jumpsuit: [BLANK]", a: "skydiving", hint: "Paracaidismo." },
+                { q: "Carabiner, Harness, Helmet: [BLANK]", a: "rock climbing", hint: "Escalada en roca." },
+                { q: "Wetsuit, Goggles, Oxygen tank: [BLANK]", a: "scuba diving", hint: "Buceo." },
+                { q: "Life jacket, Helmet, Paddles: [BLANK]", a: "white-water rafting", hint: "Canotaje en rápidos." }
+            ]
+        },
+        sec3B: {
+            instructions: 'B. Fill in the blanks with the correct words related to the "Experience". (5 points)',
+            wordBox: 'Adrenaline rush - Conquer - Extreme - Thrill - Harness',
+            questions: [
+                { q: "I want to [BLANK] the highest peak in the Andes this year.", a: "conquer", hint: "Conquistar." },
+                { q: "Bungee jumping gives you an incredible [BLANK] when you free-fall.", a: "adrenaline rush", hint: "Golpe de adrenalina." },
+                { q: "The instructor checked my [BLANK] to make sure I was safely attached to the rope.", a: "harness", hint: "Arnés." },
+                { q: "Many teenagers are looking for the [BLANK] of participating in dangerous activities.", a: "thrill", hint: "Emoción / Estremecimiento." },
+                { q: "Base jumping is considered one of the most dangerous [BLANK] sports.", a: "extreme", hint: "Extremo." }
+            ]
+        },
+        sec4: {
+            title: 'Section 4: Grammar - Indirect Questions (10 points)',
+            instructions: 'Transform the following direct questions into indirect questions using the introductory phrases provided. (10 points)',
+            questions: [
+                { q: "Where is the nearest canyon?<br>Could you tell me [BLANK_LONG]?", a: "where the nearest canyon is", hint: "Verbo 'is' al final." },
+                { q: "What time does the blizzard usually start?<br>Do you know [BLANK_LONG]?", a: "what time the blizzard usually starts", hint: "Quita 'does' y agrega 's' a start." },
+                { q: "How long have they been tracking the predators?<br>I'd like to know [BLANK_LONG].", a: "how long they have been tracking the predators", hint: "Sujeto antes del auxiliar." },
+                { q: "Did she pack the parachute and goggles?<br>Do you remember [BLANK_LONG]?", a: "if she packed the parachute and goggles", hint: "Usa 'if' y el verbo en pasado." },
+                { q: "Why is the forest so humid today?<br>Can you explain [BLANK_LONG]?", a: "why the forest is so humid today", hint: "Sujeto antes del verbo 'is'." },
+                { q: "Have the explorers found the oasis yet?<br>I was wondering [BLANK_LONG].", a: "if the explorers have found the oasis yet", hint: "Usa 'if' o 'whether'." },
+                { q: "Where can I buy a strong elastic cord?<br>Could you tell me [BLANK_LONG]?", a: "where i can buy a strong elastic cord", hint: "Sujeto 'I' antes de 'can'." },
+                { q: "Is it safe to go scuba diving during a thunderstorm?<br>Do you know [BLANK_LONG]?", a: "if it is safe to go scuba diving during a thunderstorm", hint: "Agrega 'if' y orden afirmativo." },
+                { q: "What is an amphibian?<br>I don't know [BLANK_LONG].", a: "what an amphibian is", hint: "Verbo 'is' al final." },
+                { q: "How much does the rock climbing gear cost?<br>Can you tell me [BLANK_LONG]?", a: "how much the rock climbing gear costs", hint: "Quita 'does' y pon 's' al verbo." }
+            ]
+        },
+        sec5: {
+            title: 'Section 5: Reading & Writing (10 points)',
+            instructionsA: 'A. Reading Comprehension (5 points) Read the text and choose the correct answer for each question.',
+            readingText: '<strong>Surviving the Wild</strong><br>For the past four months, our documentary crew has been filming in an isolated desert plateau in Africa. It is an extremely arid and harsh habitat, where water is scarce. We have been tracking a pack of nocturnal predators that only emerge when the scorching sun goes down. Last week, we experienced a terrifying drought that dried up the only nearby oasis. We had to relocate our camp closer to a deep canyon where a small river still flows. Today, the sky is overcast, and our meteorologist predicts a severe thunderstorm. The thrill of capturing these wild mammals on camera gives us a huge adrenaline rush, but we must stay safe. If the storm brings too much precipitation, we won\'t be able to film tonight.',
+            questionsA: [
+                { q: "How long has the documentary crew been filming?", options: ["For four weeks", "For four months", "Since last week"], a: "For four months" },
+                { q: "What type of habitat are they currently working in?", options: ["A humid forest", "A coastal peninsula", "An arid desert plateau"], a: "An arid desert plateau" },
+                { q: "When do the predators they are tracking emerge?", options: ["Only during the day", "When the sun goes down (at night)", "Early in the morning"], a: "When the sun goes down (at night)" },
+                { q: "Why did the crew have to relocate their camp?", options: ["Because of a drought that dried the oasis", "Because they wanted to rock climb", "Because of a blizzard"], a: "Because of a drought that dried the oasis" },
+                { q: "What will prevent them from filming tonight?", options: ["Too much precipitation / a thunderstorm", "A tornado", "A lack of equipment"], a: "Too much precipitation / a thunderstorm" }
+            ],
+            instructionsB: 'B. Writing (5 points)<br><span style="font-weight:normal; font-size:14px;"><em>Instruction: Complete this student\'s short paragraph describing an adventure by choosing the correct grammar and vocabulary words from the dropdowns.</em></span>',
+            writingTextParts: [
+                "I ",
+                " of this moment since I was a child. Yesterday, I went ",
+                " over the Grand Canyon. Before jumping out of the plane, my instructor made sure my ",
+                " was secure. The feeling of free-falling was a massive ",
+                ". It was an amazing experience to see the vast ",
+                " from high up in the air!"
+            ],
+            writingOptions: [
+                ["dreamed", "am dreaming", "have been dreaming"],
+                ["skydiving", "white-water rafting", "scuba diving"],
+                ["life jacket", "parachute", "wetsuit"],
+                ["drought", "adrenaline rush", "amphibian"],
+                ["blizzard", "monsoon", "plateau"]
+            ],
+            writingAnswers: ["have been dreaming", "skydiving", "parachute", "adrenaline rush", "plateau"]
+        }
+    };
+
+    let globalQuestionIndex = 1;
+    let currentInputsMap = {}; 
+    
+    // Timer & Fullscreen variables
+    let examStarted = false;
+    let startTime;
+    let timerInterval;
+
+    // Función que baraja de forma aleatoria los arrays (Preguntas y Respuestas)
+    function shuffle(array) {
+        let currentIndex = array.length, randomIndex;
+        while (currentIndex != 0) {
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex--;
+            [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+        }
+        return array;
+    }
+
+    function toggleHint(id) {
+        const hintEl = document.getElementById(id);
+        if (hintEl.style.display === 'inline-block') {
+            hintEl.style.display = 'none';
+        } else {
+            hintEl.style.display = 'inline-block';
+        }
+    }
+
+    /* --- Fullscreen & Timer Logic --- */
+    function requestFullScreen() {
+        let elem = document.documentElement;
+        try {
+            if (elem.requestFullscreen) {
+                let req = elem.requestFullscreen();
+                if(req !== undefined) req.catch(err => console.log(err));
+            } else if (elem.webkitRequestFullscreen) { /* Safari */
+                elem.webkitRequestFullscreen();
+            }
+        } catch(e) {}
+    }
+
+    function startTimer() {
+        const timerEl = document.getElementById('floating-timer');
+        timerEl.style.display = 'block';
+        startTime = Date.now();
+        
+        timerInterval = setInterval(() => {
+            let elapsed = Date.now() - startTime;
+            let totalSeconds = Math.floor(elapsed / 1000);
+            let minutes = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+            let seconds = (totalSeconds % 60).toString().padStart(2, '0');
+            timerEl.innerText = `${minutes}:${seconds}`;
+        }, 1000);
+    }
+
+    function stopTimer() {
+        clearInterval(timerInterval);
+        return document.getElementById('floating-timer').innerText;
+    }
+
+    function handleFirstInteraction() {
+        if (!examStarted) {
+            examStarted = true;
+            requestFullScreen();
+            startTimer();
+        }
+    }
+
+    /* --- Core Exam Functions --- */
+    function generateTextInput(qData, isLong) {
+        const inputId = `q_input_${globalQuestionIndex}`;
+        currentInputsMap[inputId] = { ans: qData.a, text: qData.q.replace(/<br>/g, " ") };
+        
+        let hintHtml = `<button type="button" class="hint-btn" onclick="toggleHint('hint_${inputId}')">(?)</button><span id="hint_${inputId}" class="hint-text">💡 Hint: ${qData.hint}</span>`;
+        
+        let className = isLong ? 'long-input' : '';
+        let inputHtml = `<input type="text" id="${inputId}" class="${className}" autocomplete="off" spellcheck="false">`;
+        
+        let finalQ = qData.q.replace(/^\d+\.\s*/, '');
+        finalQ = `<span class="q-number">${globalQuestionIndex}.</span> ` + finalQ;
+
+        globalQuestionIndex++;
+        return `<div class="question">${finalQ.replace('[BLANK]', inputHtml).replace('[BLANK_LONG]', inputHtml)} ${hintHtml}</div>`;
+    }
+
+    function renderExam() {
+        globalQuestionIndex = 1;
+        currentInputsMap = {};
+        const container = document.getElementById('exam-content');
+        container.innerHTML = '';
+
+        const buildSection = (secData, isLong = false) => {
+            let html = '';
+            if (secData.title) html += `<div class="section-title">${secData.title}</div>`;
+            if (secData.instructions) html += `<div class="part-instructions">${secData.instructions}</div>`;
+            if (secData.wordBox) html += `<div class="word-box">${secData.wordBox}</div>`;
+            
+            let questions = shuffle([...secData.questions]);
+            questions.forEach(q => { html += generateTextInput(q, isLong); });
+            return html;
+        };
+
+        container.innerHTML += buildSection(examData.sec1A);
+        container.innerHTML += buildSection(examData.sec1B, true);
+        container.innerHTML += buildSection(examData.sec1C, true);
+        container.innerHTML += buildSection(examData.sec2A);
+        container.innerHTML += buildSection(examData.sec2B);
+
+        // Section 2C
+        let sec2C = examData.sec2C;
+        let html2C = `<div class="part-instructions">${sec2C.instructions}</div>`;
+        html2C += `<div class="word-box">${sec2C.wordBox}</div><div class="reading-text">`;
+        
+        for(let i=0; i<sec2C.textParts.length; i++) {
+            html2C += sec2C.textParts[i];
+            if(i < sec2C.answers.length) {
+                const inputId = `q_input_${globalQuestionIndex}`;
+                currentInputsMap[inputId] = { ans: sec2C.answers[i], text: "Weather paragraph blank " + (i+1) };
+                html2C += ` <input type="text" id="${inputId}" autocomplete="off" spellcheck="false"> `;
+                html2C += `<button type="button" class="hint-btn" onclick="toggleHint('hint_${inputId}')">(?)</button><span id="hint_${inputId}" class="hint-text" style="display:none; position:absolute;">💡 ${sec2C.hints[i]}</span> `;
+                globalQuestionIndex++;
+            }
+        }
+        html2C += `</div>`;
+        container.innerHTML += html2C;
+
+        container.innerHTML += buildSection(examData.sec3A);
+        container.innerHTML += buildSection(examData.sec3B);
+        container.innerHTML += buildSection(examData.sec4, true);
+
+        // Section 5A (Reading Comprehension)
+        let sec5 = examData.sec5;
+        let html5 = `<div class="section-title">${sec5.title}</div>`;
+        html5 += `<div class="part-instructions">${sec5.instructionsA}</div>`;
+        html5 += `<div class="reading-text">${sec5.readingText}</div>`;
+        
+        let questions5A = shuffle([...sec5.questionsA]);
+        questions5A.forEach(q => {
+            const inputId = `q_input_${globalQuestionIndex}`;
+            currentInputsMap[inputId] = { ans: q.a, text: q.q };
+            
+            let optsHtml = `<option value="">-- Select answer --</option>`;
+            let shuffledOpts = shuffle([...q.options]);
+            shuffledOpts.forEach(op => {
+                optsHtml += `<option value="${op}">${op}</option>`;
+            });
+            
+            html5 += `<div class="question" style="margin-bottom: 20px;">
+                <span class="q-number">${globalQuestionIndex}.</span> ${q.q}<br>
+                <select id="${inputId}" style="margin-top: 5px; width: 100%; max-width: 400px;">${optsHtml}</select>
+            </div>`;
+            globalQuestionIndex++;
+        });
+
+        // Section 5B (Writing Dropdowns)
+        html5 += `<div class="part-instructions" style="margin-top: 30px;">${sec5.instructionsB}</div>`;
+        html5 += `<div class="reading-text" style="line-height: 2.5;">`;
+        
+        for(let i=0; i<sec5.writingTextParts.length; i++) {
+            html5 += sec5.writingTextParts[i];
+            if(i < sec5.writingAnswers.length) {
+                const inputId = `q_input_${globalQuestionIndex}`;
+                currentInputsMap[inputId] = { ans: sec5.writingAnswers[i], text: `Writing blank #${i+1}` };
+                
+                let optsHtml = `<option value="">-- Choose --</option>`;
+                let shuffledOpts = shuffle([...sec5.writingOptions[i]]);
+                shuffledOpts.forEach(op => {
+                    optsHtml += `<option value="${op}">${op}</option>`;
+                });
+                
+                html5 += `<select id="${inputId}">${optsHtml}</select>`;
+                globalQuestionIndex++;
+            }
+        }
+        html5 += `</div>`;
+        
+        container.innerHTML += html5;
+    }
+
+    function gradeExam() {
+        let score = 0;
+        let total = Object.keys(currentInputsMap).length;
+        let mistakesHtml = '';
+        let incorrectCount = 0;
+
+        for (const inputId in currentInputsMap) {
+            const el = document.getElementById(inputId);
+            const data = currentInputsMap[inputId];
+            let userVal = el.value.trim().toLowerCase().replace(/\s+/g, ' '); // Normalize spaces
+
+            let correctAnswers = data.ans.split('|').map(a => a.toLowerCase().trim());
+
+            if (correctAnswers.includes(userVal)) {
+                score++;
+                el.style.backgroundColor = '#dcfce7'; // green tint
+                el.style.color = '#166534';
+            } else {
+                incorrectCount++;
+                el.style.backgroundColor = '#fee2e2'; // red tint
+                el.style.color = '#991b1b';
+
+                let userDisplay = el.value.trim() === '' ? '<i>(blank)</i>' : el.value;
+                mistakesHtml += `
+                <div class="mistake-card">
+                    <div class="mistake-q">Question: ${data.text}</div>
+                    <span class="wrong-ans">Your Answer: ${userDisplay}</span>
+                    <span class="correct-ans">Correct: ${correctAnswers[0]}</span>
+                </div>`;
+            }
+        }
+
+        // Finalize Timer
+        const timeTaken = stopTimer();
+
+        // Calculate 0-20 grade based on the scale
+        let grade20 = 0;
+        let badgeText = "";
+        let badgeColor = "";
+        let msgEl = document.getElementById('modal-result-msg');
+
+        if (score >= 53 && score <= 60) {
+            grade20 = 18 + ((score - 53) * (2 / 7));
+            badgeText = "AD - Outstanding Achievement";
+            badgeColor = "#0284c7"; // Blue
+            msgEl.innerText = 'Outstanding! 🎉';
+        } else if (score >= 41 && score <= 52) {
+            grade20 = 14 + ((score - 41) * (3 / 11));
+            badgeText = "A - Expected Achievement";
+            badgeColor = "#16a34a"; // Green
+            msgEl.innerText = 'Good Job! 👍';
+        } else if (score >= 31 && score <= 40) {
+            grade20 = 11 + ((score - 31) * (2 / 9));
+            badgeText = "B - In Process";
+            badgeColor = "#d97706"; // Orange
+            msgEl.innerText = 'You Passed! 📝';
+        } else {
+            grade20 = 0 + ((score - 0) * (10 / 30));
+            badgeText = "C - Beginning";
+            badgeColor = "#dc2626"; // Red
+            msgEl.innerText = 'Keep Practicing! 💪';
+        }
+
+        grade20 = Math.round(grade20);
+        let formattedGrade = grade20 < 10 ? `0${grade20}` : `${grade20}`;
+
+        // Populate Modal Data
+        document.getElementById('modal-total-pts').innerText = total;
+        document.getElementById('modal-score-num').innerText = score;
+        
+        let gradeEl = document.getElementById('modal-grade-20');
+        gradeEl.innerText = formattedGrade;
+        gradeEl.style.color = badgeColor;
+
+        document.getElementById('modal-time-num').innerText = timeTaken;
+        document.getElementById('stat-correct').innerText = score;
+        document.getElementById('stat-incorrect').innerText = incorrectCount;
+
+        let badgeEl = document.getElementById('modal-logro-badge');
+        badgeEl.innerText = badgeText;
+        badgeEl.style.backgroundColor = badgeColor;
+
+        const mistakesContent = document.getElementById('modal-mistakes-content');
+        if (incorrectCount === 0) {
+            mistakesContent.innerHTML = '<div style="padding: 15px; color: var(--success); font-weight: bold;">Perfect score! No mistakes to review.</div>';
+        } else {
+            mistakesContent.innerHTML = mistakesHtml;
+        }
+
+        document.getElementById('results-overlay').style.display = 'flex';
+    }
+
+    function startExam() {
+        document.getElementById('results-overlay').style.display = 'none';
+        
+        // Reset Variables
+        examStarted = false;
+        clearInterval(timerInterval);
+        document.getElementById('floating-timer').style.display = 'none';
+        document.getElementById('floating-timer').innerText = '00:00';
+        
+        // Render New Exam (Shuffles Everything Again)
+        renderExam();
+        
+        // Scroll to top
+        window.scrollTo(0, 0);
+
+        // Re-attach listeners just in case
+        const examContent = document.getElementById('exam-content');
+        examContent.removeEventListener('click', handleFirstInteraction);
+        examContent.removeEventListener('input', handleFirstInteraction);
+        examContent.removeEventListener('change', handleFirstInteraction);
+
+        examContent.addEventListener('click', handleFirstInteraction);
+        examContent.addEventListener('input', handleFirstInteraction);
+        examContent.addEventListener('change', handleFirstInteraction);
+    }
+
+    // Initialize the exam on page load
+    window.onload = startExam;
+
+</script>
+</body>
+</html>
