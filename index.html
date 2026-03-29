@@ -4,13 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google" content="notranslate">
-    <title>English Exam - Level B1 | Mock Exam | by:Hugo Luque</title>
+    <title>English Exam - Level B1 | Mock Exam</title>
     <style>
-        /* Formal Exam Styling */
+        /* Formal Exam Styling with Interactive Background Variables */
         :root {
             --text-color: #1a1a1a;
-            --bg-color: #f4f4f9;
-            --paper-color: #ffffff;
+            --paper-color: rgba(255, 255, 255, 0.96); /* Slight transparency for modern look */
             --border-color: #cccccc;
             --highlight: #e0f2fe;
             --primary: #0369a1;
@@ -20,13 +19,45 @@
         }
 
         body {
-            font-family: 'Times New Roman', Times, serif; /* Formal exam font */
-            background-color: var(--bg-color);
+            font-family: 'Times New Roman', Times, serif;
             color: var(--text-color);
             margin: 0;
             padding: 20px;
             line-height: 1.5;
+            min-height: 100vh;
+            background-color: transparent; 
         }
+
+        /* --- INTERACTIVE BACKGROUND STYLES --- */
+        .interactive-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2;
+            background: linear-gradient(-45deg, #0a2342, #175676, #b21f1f, #8e0e00, #4a0e4e);
+            background-size: 400% 400%;
+            animation: gradientMove 15s ease infinite;
+        }
+
+        .interactive-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255, 255, 255, 0.25) 0%, rgba(0, 0, 0, 0) 40%);
+            pointer-events: none;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        /* ------------------------------------ */
 
         /* Floating Timer Styling */
         #floating-timer {
@@ -41,7 +72,7 @@
             font-family: 'Courier New', Courier, monospace;
             font-size: 28px;
             font-weight: bold;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
             z-index: 9999;
             border: 2px solid #38bdf8;
             letter-spacing: 2px;
@@ -49,11 +80,13 @@
 
         .exam-paper {
             max-width: 900px;
-            margin: 0 auto;
+            margin: 20px auto;
             background: var(--paper-color);
             padding: 40px 50px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border-radius: 8px;
             position: relative;
+            backdrop-filter: blur(10px);
         }
 
         /* Header Styles */
@@ -76,7 +109,7 @@
         .section-title {
             font-size: 18px;
             font-weight: bold;
-            background-color: #f3f4f6;
+            background-color: rgba(243, 244, 246, 0.9);
             padding: 5px 10px;
             margin: 30px 0 15px 0;
             border-left: 4px solid var(--primary);
@@ -94,7 +127,7 @@
             text-align: center;
             margin-bottom: 15px;
             font-style: italic;
-            background-color: #fafafa;
+            background-color: rgba(250, 250, 250, 0.9);
         }
 
         .question {
@@ -152,7 +185,7 @@
             border: 1px solid var(--border-color);
             padding: 15px;
             margin-bottom: 15px;
-            background-color: #fafafa;
+            background-color: rgba(250, 250, 250, 0.9);
             line-height: 1.6;
             text-align: justify;
         }
@@ -193,21 +226,26 @@
             margin-top: 40px;
             font-family: Arial, sans-serif;
             border-radius: 4px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s, background-color 0.2s;
         }
-        .submit-btn:hover { background-color: #0284c7; }
+        .submit-btn:hover { 
+            background-color: #0284c7; 
+            transform: translateY(-2px);
+        }
 
-        /* Results Modal Styling (Hoja Flotante) */
-        #results-overlay {
+        /* Modals (Confirm & Results) Styling */
+        .overlay-bg {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.85);
             z-index: 10000;
             justify-content: center;
             align-items: center;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(8px);
         }
-        #results-modal {
+        .modal-box {
             background: white;
             padding: 40px;
             border-radius: 12px;
@@ -215,11 +253,17 @@
             width: 95%;
             max-height: 90vh;
             overflow-y: auto;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
             text-align: center;
             font-family: Arial, sans-serif;
         }
         
+        /* Specific Confirm Modal Adjustments */
+        #confirm-modal-box {
+            max-width: 400px;
+            padding: 30px;
+        }
+
         .result-msg { font-size: 28px; font-weight: bold; margin-bottom: 10px; margin-top: 0; }
         
         .score-display {
@@ -290,22 +334,25 @@
         .wrong-ans { color: var(--danger); text-decoration: line-through; margin-right: 15px; font-weight: bold; }
         .correct-ans { color: var(--success); font-weight: bold; }
 
-        .retake-btn {
+        .action-btn {
             display: block;
             width: 100%;
             padding: 15px;
-            background-color: #1f2937;
             color: white;
             border: none;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
             cursor: pointer;
             border-radius: 4px;
+            transition: background-color 0.2s;
         }
-        .retake-btn:hover { background-color: #111827; }
+        .btn-gray { background-color: #6b7280; }
+        .btn-gray:hover { background-color: #4b5563; }
+        .btn-dark { background-color: #1f2937; }
+        .btn-dark:hover { background-color: #111827; }
 
         @media (max-width: 768px) {
-            .exam-paper { padding: 20px; }
+            .exam-paper { padding: 20px; margin: 10px; }
             input[type="text"].long-input { width: 100%; }
             #floating-timer { font-size: 20px; top: 10px; right: 10px; padding: 8px 15px;}
             .stats-container { flex-direction: column; }
@@ -313,6 +360,10 @@
     </style>
 </head>
 <body>
+
+<!-- Dynamic Interactive Background Elements -->
+<div class="interactive-bg"></div>
+<div class="interactive-glow" id="interactive-glow"></div>
 
 <div id="floating-timer">00:00</div>
 
@@ -322,27 +373,32 @@
         <div class="exam-title">English Mock Exam - Level B1 | 2nd Grade</div>
     </div>
 
-    <!-- Contenedor donde se inyectan las preguntas barajadas -->
+    <!-- Contenedor donde se inyectan las preguntas -->
     <div id="exam-content"></div>
 
-    <button class="submit-btn" id="submit-btn" onclick="gradeExam()">Submit Exam</button>
+    <button class="submit-btn" id="submit-btn" onclick="showConfirmModal()">Submit Exam</button>
+</div>
+
+<!-- Modal Personalizado de Confirmación (Reemplazo de "confirm()") -->
+<div id="confirm-overlay" class="overlay-bg">
+    <div id="confirm-modal-box" class="modal-box">
+        <h2 style="margin-top: 0; color: #1f2937;">Submit Exam?</h2>
+        <p style="font-size: 18px; color: #4b5563; margin-bottom: 25px;">Are you sure you want to finish and submit your answers?</p>
+        <div style="display: flex; gap: 15px;">
+            <button class="action-btn btn-gray" onclick="closeConfirmModal()">Cancel</button>
+            <button class="action-btn" style="background-color: var(--primary);" onclick="executeGradeExam()">Yes, Submit</button>
+        </div>
+    </div>
 </div>
 
 <!-- Modal Flotante de Resultados -->
-<div id="results-overlay">
-    <div id="results-modal">
+<div id="results-overlay" class="overlay-bg">
+    <div id="results-modal" class="modal-box">
         <h2 id="modal-result-msg" class="result-msg"></h2>
         
-        <div class="score-display" style="display: flex; justify-content: center; gap: 40px; align-items: center; flex-wrap: wrap;">
-            <div>
-                <div style="font-size: 16px; color: #6b7280; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">Raw Score</div>
-                <span id="modal-score-num">0</span><span style="font-size: 30px; color: #6b7280;">/<span id="modal-total-pts">60</span></span>
-            </div>
-            <div style="border-left: 3px solid #e5e7eb; height: 80px; border-radius: 2px;"></div>
-            <div>
-                <div style="font-size: 16px; color: #6b7280; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">Final Grade</div>
-                <span id="modal-grade-20" style="font-size: 80px;">00</span><span style="font-size: 30px; color: #6b7280;">/20</span>
-            </div>
+        <div class="score-display">
+            <span id="modal-score-num">0</span> 
+            <span style="font-size: 30px; color: #6b7280;">/ 60 Pts</span>
         </div>
         
         <div id="modal-logro-badge" class="logro-badge"></div>
@@ -368,8 +424,8 @@
 
         <!-- Botones de Acción -->
         <div style="display: flex; gap: 15px; margin-top: 20px;">
-            <button class="submit-btn" style="margin-top: 0; background-color: #0369a1; flex: 1;" onclick="document.getElementById('results-overlay').style.display='none'">Review Exam Paper</button>
-            <button class="retake-btn" style="margin-top: 0; flex: 1;" onclick="startExam()">🔄 Retake Exam</button>
+            <button class="action-btn" style="background-color: #0369a1; flex: 1;" onclick="document.getElementById('results-overlay').style.display='none'">Review Exam Paper</button>
+            <button class="action-btn btn-dark" style="flex: 1;" onclick="startExam()">🔄 Retake Exam</button>
         </div>
     </div>
 </div>
@@ -522,7 +578,16 @@
     let startTime;
     let timerInterval;
 
-    // Función que baraja de forma aleatoria los arrays (Preguntas y Respuestas)
+    // INTERACTIVE BACKGROUND LOGIC
+    document.addEventListener('mousemove', function(e) {
+        const glow = document.getElementById('interactive-glow');
+        if(glow) {
+            glow.style.setProperty('--x', e.clientX + 'px');
+            glow.style.setProperty('--y', e.clientY + 'px');
+        }
+    });
+
+    // Función que baraja de forma aleatoria los arrays
     function shuffle(array) {
         let currentIndex = array.length, randomIndex;
         while (currentIndex != 0) {
@@ -582,7 +647,14 @@
         }
     }
 
-    /* --- Core Exam Functions --- */
+    document.addEventListener('DOMContentLoaded', () => {
+        const examContent = document.getElementById('exam-content');
+        examContent.addEventListener('click', handleFirstInteraction);
+        examContent.addEventListener('input', handleFirstInteraction);
+        examContent.addEventListener('change', handleFirstInteraction);
+    });
+    /* --------------------------------- */
+
     function generateTextInput(qData, isLong) {
         const inputId = `q_input_${globalQuestionIndex}`;
         currentInputsMap[inputId] = { ans: qData.a, text: qData.q.replace(/<br>/g, " ") };
@@ -644,7 +716,7 @@
         container.innerHTML += buildSection(examData.sec3B);
         container.innerHTML += buildSection(examData.sec4, true);
 
-        // Section 5A (Reading Comprehension)
+        // Section 5A 
         let sec5 = examData.sec5;
         let html5 = `<div class="section-title">${sec5.title}</div>`;
         html5 += `<div class="part-instructions">${sec5.instructionsA}</div>`;
@@ -653,37 +725,37 @@
         let questions5A = shuffle([...sec5.questionsA]);
         questions5A.forEach(q => {
             const inputId = `q_input_${globalQuestionIndex}`;
-            currentInputsMap[inputId] = { ans: q.a, text: q.q };
+            currentInputsMap[inputId] = { ans: q.a, text: q.q, isSelect: true };
             
             let optsHtml = `<option value="">-- Select answer --</option>`;
-            let shuffledOpts = shuffle([...q.options]);
-            shuffledOpts.forEach(op => {
-                optsHtml += `<option value="${op}">${op}</option>`;
+            let shuffledOpts = shuffle([...q.options]); 
+            shuffledOpts.forEach(opt => {
+                optsHtml += `<option value="${opt}">${opt}</option>`;
             });
-            
-            html5 += `<div class="question" style="margin-bottom: 20px;">
-                <span class="q-number">${globalQuestionIndex}.</span> ${q.q}<br>
-                <select id="${inputId}" style="margin-top: 5px; width: 100%; max-width: 400px;">${optsHtml}</select>
-            </div>`;
+
+            html5 += `<div class="question" style="display:block; margin-bottom:15px;">
+                        <div style="font-weight:bold; margin-bottom:5px;"><span class="q-number">${globalQuestionIndex}.</span> ${q.q}</div>
+                        <select id="${inputId}" style="width:100%; max-width:400px; padding:5px;">${optsHtml}</select>
+                      </div>`;
             globalQuestionIndex++;
         });
 
-        // Section 5B (Writing Dropdowns)
-        html5 += `<div class="part-instructions" style="margin-top: 30px;">${sec5.instructionsB}</div>`;
-        html5 += `<div class="reading-text" style="line-height: 2.5;">`;
+        // Section 5B
+        html5 += `<div class="part-instructions" style="margin-top:25px;">${sec5.instructionsB}</div>`;
+        html5 += `<div class="reading-text" style="background-color:rgba(240, 253, 244, 0.9); border-color:#86efac;">`;
         
         for(let i=0; i<sec5.writingTextParts.length; i++) {
             html5 += sec5.writingTextParts[i];
             if(i < sec5.writingAnswers.length) {
                 const inputId = `q_input_${globalQuestionIndex}`;
-                currentInputsMap[inputId] = { ans: sec5.writingAnswers[i], text: `Writing blank #${i+1}` };
+                currentInputsMap[inputId] = { ans: sec5.writingAnswers[i], text: "Writing paragraph blank " + (i+1), isSelect: true };
                 
-                let optsHtml = `<option value="">-- Choose --</option>`;
-                let shuffledOpts = shuffle([...sec5.writingOptions[i]]);
-                shuffledOpts.forEach(op => {
-                    optsHtml += `<option value="${op}">${op}</option>`;
+                let optsHtml = `<option value="">...</option>`;
+                let shuffledOpts = shuffle([...sec5.writingOptions[i]]); 
+                shuffledOpts.forEach(opt => {
+                    optsHtml += `<option value="${opt}">${opt}</option>`;
                 });
-                
+
                 html5 += `<select id="${inputId}">${optsHtml}</select>`;
                 globalQuestionIndex++;
             }
@@ -693,127 +765,140 @@
         container.innerHTML += html5;
     }
 
-    function gradeExam() {
+    // Modal Confirmation Logic (Replaces native confirm())
+    function showConfirmModal() {
+        document.getElementById('confirm-overlay').style.display = 'flex';
+    }
+
+    function closeConfirmModal() {
+        document.getElementById('confirm-overlay').style.display = 'none';
+    }
+
+    function executeGradeExam() {
+        closeConfirmModal(); // Cierra la pregunta de confirmación
+
+        let finalTimeString = "00:00";
+        try {
+            finalTimeString = stopTimer();
+            document.getElementById('modal-time-num').innerText = finalTimeString;
+        } catch(e) { console.error("Timer error", e); }
+
+        try {
+            if (document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen().catch(err => console.log(err));
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                }
+            }
+        } catch(e) { console.log("No fullscreen to exit", e); }
+
         let score = 0;
-        let total = Object.keys(currentInputsMap).length;
-        let mistakesHtml = '';
         let incorrectCount = 0;
+        let mistakesHTML = '';
 
-        for (const inputId in currentInputsMap) {
-            const el = document.getElementById(inputId);
-            const data = currentInputsMap[inputId];
-            let userVal = el.value.trim().toLowerCase().replace(/\s+/g, ' '); // Normalize spaces
+        // Recolectar y calificar resultados
+        for(let id in currentInputsMap) {
+            let userElement = document.getElementById(id);
+            if(!userElement) continue;
 
-            let correctAnswers = data.ans.split('|').map(a => a.toLowerCase().trim());
+            let userAns = userElement.value.trim().toLowerCase().replace(/\s+/g, ' ');
+            let data = currentInputsMap[id];
+            let correctAnswers = data.ans.toLowerCase().split('|'); 
+            
+            let isCorrect = false;
+            for(let i=0; i<correctAnswers.length; i++){
+                if(userAns === correctAnswers[i].trim()) {
+                    isCorrect = true;
+                    break;
+                }
+            }
 
-            if (correctAnswers.includes(userVal)) {
+            if(isCorrect) {
                 score++;
-                el.style.backgroundColor = '#dcfce7'; // green tint
-                el.style.color = '#166534';
+                userElement.style.backgroundColor = "#dcfce7"; 
+                userElement.style.color = "#166534";
+                if(!data.isSelect) userElement.style.borderBottomColor = "#166534";
             } else {
                 incorrectCount++;
-                el.style.backgroundColor = '#fee2e2'; // red tint
-                el.style.color = '#991b1b';
+                userElement.style.backgroundColor = "#fee2e2"; 
+                userElement.style.color = "#991b1b";
+                if(!data.isSelect) userElement.style.borderBottomColor = "#991b1b";
+                
+                let displayUserAns = userAns === "" ? "(Blank)" : userElement.value;
+                let displayCorrectAns = correctAnswers[0]; 
 
-                let userDisplay = el.value.trim() === '' ? '<i>(blank)</i>' : el.value;
-                mistakesHtml += `
-                <div class="mistake-card">
-                    <div class="mistake-q">Question: ${data.text}</div>
-                    <span class="wrong-ans">Your Answer: ${userDisplay}</span>
-                    <span class="correct-ans">Correct: ${correctAnswers[0]}</span>
-                </div>`;
+                mistakesHTML += `
+                    <div class="mistake-card">
+                        <div class="mistake-q">${data.text.replace(/<[^>]*>?/gm, '')}</div>
+                        Your answer: <span class="wrong-ans">${displayUserAns}</span><br>
+                        Correct answer: <span class="correct-ans">${displayCorrectAns}</span>
+                    </div>
+                `;
             }
+            userElement.disabled = true; 
         }
 
-        // Finalize Timer
-        const timeTaken = stopTimer();
-
-        // Calculate 0-20 grade based on the scale
-        let grade20 = 0;
-        let badgeText = "";
-        let badgeColor = "";
-        let msgEl = document.getElementById('modal-result-msg');
-
-        if (score >= 53 && score <= 60) {
-            grade20 = 18 + ((score - 53) * (2 / 7));
-            badgeText = "AD - Outstanding Achievement";
-            badgeColor = "#0284c7"; // Blue
-            msgEl.innerText = 'Outstanding! 🎉';
-        } else if (score >= 41 && score <= 52) {
-            grade20 = 14 + ((score - 41) * (3 / 11));
-            badgeText = "A - Expected Achievement";
-            badgeColor = "#16a34a"; // Green
-            msgEl.innerText = 'Good Job! 👍';
-        } else if (score >= 31 && score <= 40) {
-            grade20 = 11 + ((score - 31) * (2 / 9));
-            badgeText = "B - In Process";
-            badgeColor = "#d97706"; // Orange
-            msgEl.innerText = 'You Passed! 📝';
-        } else {
-            grade20 = 0 + ((score - 0) * (10 / 30));
-            badgeText = "C - Beginning";
-            badgeColor = "#dc2626"; // Red
-            msgEl.innerText = 'Keep Practicing! 💪';
-        }
-
-        grade20 = Math.round(grade20);
-        let formattedGrade = grade20 < 10 ? `0${grade20}` : `${grade20}`;
-
-        // Populate Modal Data
-        document.getElementById('modal-total-pts').innerText = total;
+        // Mostrar Resultados en la Pantalla Modal
         document.getElementById('modal-score-num').innerText = score;
-        
-        let gradeEl = document.getElementById('modal-grade-20');
-        gradeEl.innerText = formattedGrade;
-        gradeEl.style.color = badgeColor;
-
-        document.getElementById('modal-time-num').innerText = timeTaken;
         document.getElementById('stat-correct').innerText = score;
         document.getElementById('stat-incorrect').innerText = incorrectCount;
+        document.getElementById('submit-btn').style.display = 'none';
 
-        let badgeEl = document.getElementById('modal-logro-badge');
-        badgeEl.innerText = badgeText;
-        badgeEl.style.backgroundColor = badgeColor;
-
+        const resultsOverlay = document.getElementById('results-overlay');
+        const resultMsg = document.getElementById('modal-result-msg');
+        const logroBadge = document.getElementById('modal-logro-badge');
         const mistakesContent = document.getElementById('modal-mistakes-content');
-        if (incorrectCount === 0) {
-            mistakesContent.innerHTML = '<div style="padding: 15px; color: var(--success); font-weight: bold;">Perfect score! No mistakes to review.</div>';
+        
+        resultsOverlay.style.display = 'flex'; // ACTIVA LA VENTANA DE RESULTADOS
+
+        // Escala de Puntos (Basado en 60 espacios/preguntas totales generadas)
+        if (score >= 53) {
+            resultMsg.innerText = "🎉 Outstanding Performance! 🎉";
+            resultMsg.style.color = "var(--success)";
+            logroBadge.innerHTML = "Achievement: AD (Outstanding)<br><span style='font-size: 18px; font-weight: normal;'>Equivalent: 18 - 20</span>";
+            logroBadge.style.backgroundColor = "var(--success)";
+        } else if (score >= 41) {
+            resultMsg.innerText = "👏 Great Job! 👏";
+            resultMsg.style.color = "var(--primary)";
+            logroBadge.innerHTML = "Achievement: A (Expected)<br><span style='font-size: 18px; font-weight: normal;'>Equivalent: 14 - 17</span>";
+            logroBadge.style.backgroundColor = "var(--primary)";
+        } else if (score >= 31) {
+            resultMsg.innerText = "👍 Good effort. Keep practicing.";
+            resultMsg.style.color = "var(--warning)";
+            logroBadge.innerHTML = "Achievement: B (In Progress)<br><span style='font-size: 18px; font-weight: normal;'>Equivalent: 11 - 13</span>";
+            logroBadge.style.backgroundColor = "var(--warning)";
         } else {
-            mistakesContent.innerHTML = mistakesHtml;
+            resultMsg.innerText = "📚 Needs improvement. Keep studying!";
+            resultMsg.style.color = "var(--danger)";
+            logroBadge.innerHTML = "Achievement: C (Beginning)<br><span style='font-size: 18px; font-weight: normal;'>Equivalent: 00 - 10</span>";
+            logroBadge.style.backgroundColor = "var(--danger)";
         }
 
-        document.getElementById('results-overlay').style.display = 'flex';
+        if(mistakesHTML === "") {
+            mistakesContent.innerHTML = "<h3 style='color:var(--success); text-align:center;'>Perfect Score! You have no mistakes.</h3>";
+        } else {
+            mistakesContent.innerHTML = mistakesHTML;
+        }
     }
 
     function startExam() {
-        document.getElementById('results-overlay').style.display = 'none';
-        
-        // Reset Variables
         examStarted = false;
         clearInterval(timerInterval);
         document.getElementById('floating-timer').style.display = 'none';
         document.getElementById('floating-timer').innerText = '00:00';
         
-        // Render New Exam (Shuffles Everything Again)
+        document.getElementById('results-overlay').style.display = 'none';
+        document.getElementById('confirm-overlay').style.display = 'none';
+        document.getElementById('submit-btn').style.display = 'block';
+
         renderExam();
         
-        // Scroll to top
-        window.scrollTo(0, 0);
-
-        // Re-attach listeners just in case
-        const examContent = document.getElementById('exam-content');
-        examContent.removeEventListener('click', handleFirstInteraction);
-        examContent.removeEventListener('input', handleFirstInteraction);
-        examContent.removeEventListener('change', handleFirstInteraction);
-
-        examContent.addEventListener('click', handleFirstInteraction);
-        examContent.addEventListener('input', handleFirstInteraction);
-        examContent.addEventListener('change', handleFirstInteraction);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Initialize the exam on page load
     window.onload = startExam;
-
 </script>
+
 </body>
 </html>
